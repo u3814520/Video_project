@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-
 class Step(ABC):
     def __init__(self):
         pass
@@ -8,7 +7,6 @@ class Step(ABC):
     @abstractmethod
     def process(self,inputs):
         pass
-
 
 class StepException(Exception):  # Exception內建
     pass

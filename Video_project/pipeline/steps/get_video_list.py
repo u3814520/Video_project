@@ -1,7 +1,8 @@
 import urllib.request
 import json
 from Video_project.settings import API_KEY as KEY
-from Video_project.steps.step import Step , StepException
+from Video_project.pipeline.steps.step import Step
+
 
 class GetVideoList(Step):
     def process(self,inputs):
