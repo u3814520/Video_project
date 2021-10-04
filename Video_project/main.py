@@ -1,13 +1,16 @@
-from Video_project.pipeline.steps import GetVideoList
-from Video_project.pipeline.steps import StepException
+from Video_project.pipeline.steps.get_video_list import GetVideoList
+from Video_project.pipeline.steps.step import StepException
+from Video_project.pipeline.pipeline import Pipeline
 
-CHANNEL_ID='UC5YKivGUTTQmhSuaXbxfZSg'  # user video id
+CHANNEL_ID = 'UC5YKivGUTTQmhSuaXbxfZSg'  # user video id
 
-steps=[GetVideoList(),]
 
-for step in steps:
-    try:
-        step.process()
-    except StepException as e:
-        print('Exception happened:'e)
-        break
+def main():
+    inputs = {'channel_id': CHANNEL_ID}
+    steps = [GetVideoList(),]
+    p = Pipeline(steps)
+    p.run(inputs)
+
+
+if __name__ == '__main__':
+    main()

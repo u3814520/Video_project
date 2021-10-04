@@ -6,7 +6,6 @@ from Video_project.pipeline.steps.step import Step
 
 class GetVideoList(Step):
     def process(self,inputs):
-        self.get_all_video_in_channe()
         channel_id= inputs['channel_id']
         api_key = KEY
         base_video_url = 'https://www.youtube.com/watch?v='
@@ -25,6 +24,5 @@ class GetVideoList(Step):
                 url = first_url + f'&pageToken={next_page_token}'
             except KeyError:
                 break
+        print(video_links)
         return video_links
-
-    video_list=get_all_video_in_channel(CHANNEL_ID)
