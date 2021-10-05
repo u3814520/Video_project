@@ -5,12 +5,13 @@ from Video_project.pipeline.steps.step import Step
 
 
 class GetVideoList(Step):
-    def process(self,data,inputs):
+    def process(self,data,inputs,utils):
         channel_id= inputs['channel_id']
         api_key = KEY
         base_video_url = 'https://www.youtube.com/watch?v='
         base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
         first_url = base_search_url+f'key={api_key}&channelId={channel_id}&part=snippet,id&order=date&maxResults=25'
+        # print(first_url)
         video_links = []
         url = first_url
         while True:
@@ -26,3 +27,4 @@ class GetVideoList(Step):
                 break
         print(video_links)
         return video_links
+
