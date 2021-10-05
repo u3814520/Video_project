@@ -5,7 +5,7 @@ from Video_project.pipeline.steps.step import Step
 
 
 class GetVideoList(Step):
-    def process(self,inputs):
+    def process(self,data,inputs):
         channel_id= inputs['channel_id']
         api_key = KEY
         base_video_url = 'https://www.youtube.com/watch?v='
