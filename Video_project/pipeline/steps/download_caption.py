@@ -9,9 +9,9 @@ class DownloadCaptions(Step):
         start = time.perf_counter()
         threads = []
         for url in data:
-            print('Downloading caption for', str(url.id))
+            print(f'Downloading caption for{url.id}')
             if utils.caption_file_exists(url):
-                print('Caption file existed for video id:', str(url.id))
+                print(f'Caption file existed for video id:{url.id}')
                 continue
 
             # threads.append(Thread(target=self.get_caption, args=(url,)))
@@ -29,11 +29,11 @@ class DownloadCaptions(Step):
 
     def get_caption(self, url):
         try:
-            captions = YouTubeTranscriptApi.get_transcript(url.id)
+            captions = YouTubeTranscriptApi.get_transcript(url.caption_filepath)
             captions_l = list(json.dumps(i) for i in captions)
             with open(url.caption_filepath, 'w', encoding='utf-8') as fp:
                 for i in captions_l:
                     fp.write(i + '\n')
         except:
-            print('Subtitle is disabled for video id:', url.id)
+            print(f'Subtitle is disabled for video id:{url.id}')
 
