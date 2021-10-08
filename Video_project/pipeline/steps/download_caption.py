@@ -1,39 +1,34 @@
-from Video_project.pipeline.steps.step import Step, StepException
-from youtube_transcript_api import YouTubeTranscriptApi
+import os
 import time
-import json
+
+from pytube import YouTube
+
+from .step import Step
+from .step import StepException
+
 
 class DownloadCaptions(Step):
-
     def process(self, data, inputs, utils):
-        start = time.perf_counter()
-        threads = []
-        for url in data:
-            print(f'Downloading caption for{url.id}')
-            if utils.caption_file_exists(url):
-                print(f'Caption file existed for video id:{url.id}')
+        start = time.time()
+        for yt in data:
+            print('downloading caption for', yt.id)
+            if utils.caption_file_exists(yt):
+                print('found existing caption file')
                 continue
 
-            # threads.append(Thread(target=self.get_caption, args=(url,)))
+            try:
+                source = YouTube(yt.url)
+                en_caption = source.captions.get_by_language_code('a.en')
+                en_caption_convert_to_srt = (en_caption.generate_srt_captions())
+            except (KeyError, AttributeError):
+                print('Error when downloading caption for', yt.url)
+                continue
 
-        for thread in threads:
-            thread.start()
+            text_file = open(yt.caption_filepath, "w", encoding='utf-8')
+            text_file.write(en_caption_convert_to_srt)
+            text_file.close()
 
-        for thread in threads:
-            thread.join()
-
-        end = time.perf_counter()
-        print(f'Captions downloading elapsed time:{round(end - start, 2)} secs.')
+        end = time.time()
+        print('took', end - start, 'seconds')
 
         return data
-
-    def get_caption(self, url):
-        try:
-            captions = YouTubeTranscriptApi.get_transcript(url.caption_filepath)
-            captions_l = list(json.dumps(i) for i in captions)
-            with open(url.caption_filepath, 'w', encoding='utf-8') as fp:
-                for i in captions_l:
-                    fp.write(i + '\n')
-        except:
-            print(f'Subtitle is disabled for video id:{url.id}')
-
