@@ -8,13 +8,13 @@ class DownloadCaptions(Step):
     def process(self, data, inputs, utils):
         start = time.perf_counter()
         threads = []
-        for yt in data:
-            print('Downloading caption for', yt.id)
-            if utils.caption_file_exist(yt):
-                print('Caption file existed for video id:', yt.id)
+        for url in data:
+            print('Downloading caption for', str(url.id))
+            if utils.caption_file_exists(url):
+                print('Caption file existed for video id:', str(url.id))
                 continue
 
-            # threads.append(Thread(target=self.get_caption, args=(yt,)))
+            # threads.append(Thread(target=self.get_caption, args=(url,)))
 
         for thread in threads:
             thread.start()
@@ -27,13 +27,13 @@ class DownloadCaptions(Step):
 
         return data
 
-    def get_caption(self, yt):
+    def get_caption(self, url):
         try:
-            captions = YouTubeTranscriptApi.get_transcript(yt.id)
+            captions = YouTubeTranscriptApi.get_transcript(url.id)
             captions_l = list(json.dumps(i) for i in captions)
-            with open(yt.caption_filepath, 'w', encoding='utf-8') as fp:
+            with open(url.caption_filepath, 'w', encoding='utf-8') as fp:
                 for i in captions_l:
                     fp.write(i + '\n')
         except:
-            print('Subtitle is disabled for video id:', yt.id)
+            print('Subtitle is disabled for video id:', url.id)
 
